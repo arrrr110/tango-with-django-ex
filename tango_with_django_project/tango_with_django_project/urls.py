@@ -34,6 +34,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     #Add in this url pattern to override the default pattern in accounts.
     path('accounts/register/', MyRegistrationView.as_view(), name='registration_register'),
+    path('rango/add_profile/',views.register_profile,name='register_profile'),
     path('accounts/',include('registration.backends.simple.urls')),
     ]
 

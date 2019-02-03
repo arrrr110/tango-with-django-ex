@@ -137,6 +137,8 @@ STATIC_PATH = os.path.join(BASE_DIR,'static')
 
 STATIC_URL = '/static/' # You may find this is already defined as such.
 
+STATIC_ROOT = '/var/www/rango/static/' # 把静态文件放在指定文件夹，uWsgi中也会有相应设置
+
 STATICFILES_DIRS = (
     STATIC_PATH,
 )

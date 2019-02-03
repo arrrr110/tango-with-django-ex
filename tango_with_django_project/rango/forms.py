@@ -50,7 +50,10 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ('username', 'email', 'password')
 
-class UserProfileForm(forms.ModelForm):
+
+class UserProfileForm(forms.ModelForm): # 用户的网站、图片资料完善
+    # website = forms.URLField(help_text="Please enter the websit.")
+    # picture = forms.ImageField()
     class Meta:
         model = UserProfile
         fields = ('website', 'picture')

@@ -146,6 +146,48 @@ def about(request):
 
 from rango.forms import UserForm, UserProfileForm
 
+# 创建register_profile()视图以捕获配置文件详细信息;
+def register_profile(request):
+    if not request.user.is_authenticated:# 限制未登录用户访问
+        return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+        print("#"*100)
+    else:
+        # A HTTP POST?
+        if request.method == 'POST':
+            user_form = UserForm(data=request.POST)
+            profile_form = UserProfileForm(data=request.POST)
+
+            # Have we been provided with a valid form?
+            if profile_form.is_valid():
+                user = user_form
+                # Save the new category to the database.
+                profile = profile_form.save(commit=False)
+                profile.user=user
+
+                # Did the user provide a profile picture?
+                # If so, we need to get it from the input form and put it in the UserProfile model.
+                if 'picture' in request.FILES:
+                    profile.picture = request.FILES['picture']
+
+                # Now we save the UserProfile model instance.
+                profile.save()
+                
+
+                # Now call the index() view.
+                # The user will be shown the homepage.
+                return index(request)
+            else:
+                # The supplied form contained errors - just print them to the terminal.
+                print (profile_form.errors)
+        else:
+            # If the request was not a POST, display the form to enter details.
+            user_form = UserForm()
+            profile_form = UserProfileForm()
+
+    # Bad form (or form details), no form supplied...
+    # Render the form with error messages (if any).
+    return render(request, 'rango/profile_registration.html', {'profile_form': profile_form,'user_form':user_form})
+
 # def register(request):
 #     if request.session.test_cookie_worked():
 #         print (">>>> TEST COOKIE WORKED!")
