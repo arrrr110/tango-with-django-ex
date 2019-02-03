@@ -1,0 +1,28 @@
+{% extends 'rango/base.html' %}
+
+{% load staticfiles %}
+
+{% block body_block %}
+<a href="{% url 'index' %}">Return to the homepage.</a><br />
+
+{% csrf_token %}
+        <!--{% if categories %}
+            <ul class="list-group">
+                {% for category in categories %}
+                    <li class="list-group-item"><a href="{% url 'category'  category.slug %}">{{ category.name }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>There are no categories present.</strong>
+        {% endif %}-->
+        <br>
+        <br>
+        
+        {% if user_list %}
+            {% for item in user_list %}
+            {{ item }}
+            {% endfor %}
+        {% else %}
+        <p>No user_list</p>
+        {% endif %}
+{% endblock %}

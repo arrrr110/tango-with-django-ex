@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from rango.models import Category, Page
-from rango.forms import CategoryForm, PageForm
+from rango.models import Category, Page, UserProfile
+from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -150,7 +150,7 @@ from rango.forms import UserForm, UserProfileForm
 def register_profile(request):
     if not request.user.is_authenticated:# 限制未登录用户访问
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
-        print("#"*100)
+        # print("#"*100)
     else:
         # A HTTP POST?
         if request.method == 'POST':
@@ -158,7 +158,7 @@ def register_profile(request):
             profile_form = UserProfileForm(data=request.POST)
 
             # Have we been provided with a valid form?
-            if profile_form.is_valid():
+            if profile_form.is_valid() and user_form.is_valid():
                 user = user_form
                 # Save the new category to the database.
                 profile = profile_form.save(commit=False)
@@ -186,8 +186,21 @@ def register_profile(request):
 
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
+    print("#"*100)
     return render(request, 'rango/profile_registration.html', {'profile_form': profile_form,'user_form':user_form})
 
+def profile(request):
+    username = request.COOKIES.get('name','')
+    print(username+'%'*100)
+    category_list = Category.objects.order_by('-likes')[:5]
+    page_list = Page.objects.order_by('-views')[:5]
+    user_list = UserProfile.objects.all()
+    context_dict = {'categories': category_list, 
+                    'pages': page_list,
+                    'user_list':user_list
+                    }
+  
+    return render(request, 'rango/profile.html', context_dict)
 # def register(request):
 #     if request.session.test_cookie_worked():
 #         print (">>>> TEST COOKIE WORKED!")
@@ -204,48 +217,48 @@ def register_profile(request):
 #         profile_form = UserProfileForm(data=request.POST)
 
 #         # If the two forms are valid...
-#         if user_form.is_valid() and profile_form.is_valid():
-#             # Save the user's form data to the database.
-#             user = user_form.save()
+    #     if user_form.is_valid() and profile_form.is_valid():
+    #         # Save the user's form data to the database.
+    #         user = user_form.save()
 
-#             # Now we hash the password with the set_password method.
-#             # Once hashed, we can update the user object.
-#             user.set_password(user.password)
-#             user.save()
+    #         # Now we hash the password with the set_password method.
+    #         # Once hashed, we can update the user object.
+    #         user.set_password(user.password)
+    #         user.save()
 
-#             # Now sort out the UserProfile instance.
-#             # Since we need to set the user attribute ourselves, we set commit=False.
-#             # This delays saving the model until we're ready to avoid integrity problems.
-#             profile = profile_form.save(commit=False)
-#             profile.user = user
+    #         # Now sort out the UserProfile instance.
+    #         # Since we need to set the user attribute ourselves, we set commit=False.
+    #         # This delays saving the model until we're ready to avoid integrity problems.
+    #         profile = profile_form.save(commit=False)
+    #         profile.user = user
 
-#             # Did the user provide a profile picture?
-#             # If so, we need to get it from the input form and put it in the UserProfile model.
-#             if 'picture' in request.FILES:
-#                 profile.picture = request.FILES['picture']
+    #         # Did the user provide a profile picture?
+    #         # If so, we need to get it from the input form and put it in the UserProfile model.
+    #         if 'picture' in request.FILES:
+    #             profile.picture = request.FILES['picture']
 
-#             # Now we save the UserProfile model instance.
-#             profile.save()
+    #         # Now we save the UserProfile model instance.
+    #         profile.save()
 
-#             # Update our variable to tell the template registration was successful.
-#             registered = True
+    #         # Update our variable to tell the template registration was successful.
+    #         registered = True
 
-#         # Invalid form or forms - mistakes or something else?
-#         # Print problems to the terminal.
-#         # They'll also be shown to the user.
-#         else:
-#             print (user_form.errors, profile_form.errors)
+    #     # Invalid form or forms - mistakes or something else?
+    #     # Print problems to the terminal.
+    #     # They'll also be shown to the user.
+    #     else:
+    #         print (user_form.errors, profile_form.errors)
 
-#     # Not a HTTP POST, so we render our form using two ModelForm instances.
-#     # These forms will be blank, ready for user input.
-#     else:
-#         user_form = UserForm()
-#         profile_form = UserProfileForm()
+    # # Not a HTTP POST, so we render our form using two ModelForm instances.
+    # # These forms will be blank, ready for user input.
+    # else:
+    #     user_form = UserForm()
+    #     profile_form = UserProfileForm()
 
-#     # Render the template depending on the context.
-#     return render(request,
-#             'rango/register.html',
-#             {'user_form': user_form, 'profile_form': profile_form, 'registered': registered} )
+    # # Render the template depending on the context.
+    # return render(request,
+    #         'rango/register.html',
+    #         {'user_form': user_form, 'profile_form': profile_form, 'registered': registered} )
 
 # def user_login(request):
 

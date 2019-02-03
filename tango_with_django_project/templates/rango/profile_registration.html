@@ -5,10 +5,11 @@
 {% block body_block %}
     <h1>registration profile</h1>
 
-        <form id="form" method="post" action="/rango/add_profile/"
+        <form id="form" method="post" action="/rango/profile/"
                 enctype="multipart/form-data">
             {% csrf_token %}
-
+         Rango says: <strong>thank you for Profile!</strong><br />
+        <a href="{% url 'index' %}">Return to the homepage.</a><br />
             {{ profile_form.as_p }}
 
             {% csrf_token %}
