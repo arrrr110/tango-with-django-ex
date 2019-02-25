@@ -186,6 +186,7 @@ def register_profile(request):
 
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
+
     print("#"*100)
     return render(request, 'rango/profile_registration.html', {'profile_form': profile_form,'user_form':user_form})
 

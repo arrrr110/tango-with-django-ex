@@ -11,8 +11,6 @@
          Rango says: <strong>thank you for Profile!</strong><br />
         <a href="{% url 'index' %}">Return to the homepage.</a><br />
             {{ profile_form.as_p }}
-
-            {% csrf_token %}
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
             {% endfor %}
